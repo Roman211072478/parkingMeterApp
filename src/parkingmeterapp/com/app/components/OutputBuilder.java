@@ -38,7 +38,7 @@ public class OutputBuilder {
          return  "Time:\n"+hours+" hours"+ " and minutes"+"\n"+
                 "Your entered:\nR "+amountEntered+"\nYour change:\nR "+
                 changeAmount+"\n"+
-                "Denomination:\n"+filterDenominator();
+                filterDenominator();
      }
      
      
@@ -73,7 +73,11 @@ public class OutputBuilder {
     
     private String filterDenominator()
     {
-        String result="";
+        if(this.changeAmount == 0)
+        {
+            return "";
+        }
+        String result="Denomination:\n";
             
            for(int x = 0;x<denominatorsList.size();x++){
        

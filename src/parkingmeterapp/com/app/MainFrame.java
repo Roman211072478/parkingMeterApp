@@ -12,8 +12,12 @@ import com.parking.meter.logic.AmountPayable;
 import com.parking.meter.models.Denominators;
 import com.parking.meter.view.builder.components.DateComponent;
 import java.awt.FlowLayout;
+import java.util.Date;
 import javax.swing.JSpinner;
 import parkingmeterapp.com.app.components.OutputBuilder;
+import parkingmeterapp.com.app.repo.Impl.PaymentRepoImpl;
+import parkingmeterapp.com.app.repo.PaymentRepo;
+import parkingmeterapp.com.app.view.AdminFrame;
 
 
 /**
@@ -115,10 +119,16 @@ public class MainFrame extends javax.swing.JFrame {
         jSpinner9.setValue(0);
         lbAmountToPay.setText("R 0.00");
         outputReceipts.setText("");
-       
+        
         disableMiddleSpinners();
         this.hours = 0;
         this.amount = 0.00;
+        
+        calcPaymentBtn.setEnabled(true);
+        entryTimeDateSpinner.setEnabled(true);  
+        entryTimeDateSpinner.setValue(new Date());
+        exitTimeDateSpinner.setEnabled(true);
+        exitTimeDateSpinner.setValue(new Date());
     }
     private void disableMiddleSpinners(){
          
@@ -193,6 +203,7 @@ public class MainFrame extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Parking Meter App");
 
         entryTimePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Entry Time", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("DejaVu Sans", 0, 12), new java.awt.Color(0, 0, 0))); // NOI18N
         entryTimePanel.setName("pEntry"); // NOI18N
@@ -442,6 +453,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jButton4.setText("Admin");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -528,6 +544,12 @@ public class MainFrame extends javax.swing.JFrame {
         this.calculateDenominator = new CalculateValueOfDenominators(amount);
         
         enableMiddleSpinners();
+        
+         entryTimeDateSpinner.setEnabled(false);
+         exitTimeDateSpinner.setEnabled(false);
+         
+         calcPaymentBtn.setEnabled(false);
+         
     }//GEN-LAST:event_calcPaymentBtnActionPerformed
 
    
@@ -643,9 +665,30 @@ public class MainFrame extends javax.swing.JFrame {
         
         this.outputReceipts.setText(this.outputBuilder.createWholeString());
                
-      
+        PaymentRepo repo = new PaymentRepoImpl();
+        repo.write(prepDataForRepo());
+                
+      this.payBtn.setEnabled(false);
+      disableMiddleSpinners();
     }//GEN-LAST:event_payBtnActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+             
+        AdminFrame nextFrame = new AdminFrame();
+            nextFrame.setAlwaysOnTop(true);
+            nextFrame.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private String prepDataForRepo()
+    {      
+        return  String.valueOf(this.entryTimeDateSpinner.getValue())+" - "+
+                String.valueOf(this.exitTimeDateSpinner.getValue())+" - "+
+                String.valueOf(this.hours) +" - "+
+                String.valueOf(this.amount) +" - "+
+                String.valueOf(this.amountEntered)+" - "+
+                String.valueOf(Math.abs(amount-amountEntered))+" - ";
+              
+    }
     /**
      * @param args the command line arguments
      */
