@@ -5,10 +5,11 @@
  */
 package parkingmeterapp.com.app.components;
 
-import com.parking.meter.models.DenominatorInnerValues;
-import com.parking.meter.models.Denominators;
+
 import java.util.ArrayList;
 import java.util.List;
+import parkingmeterapp.com.app.models.DenominatorInnerValues;
+import parkingmeterapp.com.app.models.Denominators;
 
 /**
  *

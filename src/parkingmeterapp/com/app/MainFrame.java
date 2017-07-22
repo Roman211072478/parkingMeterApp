@@ -5,18 +5,18 @@
  */
 package parkingmeterapp.com.app;
 
-import com.parking.meter.calculations.CalculateChangeDenominators;
-import com.parking.meter.calculations.CalculateHours;
-import com.parking.meter.calculations.CalculateValueOfDenominators;
-import com.parking.meter.logic.AmountPayable;
-import com.parking.meter.models.Denominators;
-import com.parking.meter.view.builder.components.DateComponent;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import parkingmeterapp.com.app.calculations.CalculateChangeDenominators;
+import parkingmeterapp.com.app.calculations.CalculateHours;
+import parkingmeterapp.com.app.calculations.CalculateValueOfDenominators;
+import parkingmeterapp.com.app.components.DateComponent;
 import parkingmeterapp.com.app.components.OutputBuilder;
+import parkingmeterapp.com.app.logic.AmountPayable;
+import parkingmeterapp.com.app.models.Denominators;
 import parkingmeterapp.com.app.repo.Impl.PaymentRepoImpl;
 import parkingmeterapp.com.app.repo.PaymentRepo;
 import parkingmeterapp.com.app.view.AdminFrame;
