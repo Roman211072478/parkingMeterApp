@@ -5,6 +5,7 @@
  */
 package parkingmeterapp.com.app;
 
+import com.parking.meter.calculations.CalculateChangeDenominators;
 import com.parking.meter.calculations.CalculateHours;
 import com.parking.meter.calculations.CalculateValueOfDenominators;
 import com.parking.meter.logic.AmountPayable;
@@ -37,6 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
     private String yourChanges;
     private String txtTime,txtEnterAmount,txtChange,txtDenominators = "";
     private OutputBuilder outputBuilder;
+    private CalculateChangeDenominators changeCalculator = new CalculateChangeDenominators();;
     
     public MainFrame() {
         initComponents();
@@ -46,7 +48,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void CustomizedInitialize() {
         
         createLeftPanels();
-     
+        disableMiddleSpinners();
         
     }
     private void setDenominatorMainObject()
@@ -78,6 +80,74 @@ public class MainFrame extends javax.swing.JFrame {
         this.exitTimePanel.add(this.exitTimeDateSpinner);
     }
     
+    private void checkForRightAmount()
+    {
+        
+        if(this.amountEntered < this.amount || this.amountEntered == 0){
+             
+            if(this.payBtn.isEnabled()){
+             this.payBtn.setEnabled(false);
+             }
+             
+            }
+        else if(this.amountEntered >= this.amount)
+        {           
+            if(!this.payBtn.isEnabled()){
+             this.payBtn.setEnabled(true);
+            }            
+        }                   
+        
+    }
+    
+    private void reset()
+    {
+        jSpinner1.setValue(0);
+        jSpinner1.setValue(0);
+        jSpinner10.setValue(0);
+        jSpinner11.setValue(0);
+        jSpinner2.setValue(0);
+        jSpinner3.setValue(0);
+        jSpinner4.setValue(0);
+        jSpinner5.setValue(0);
+        jSpinner6.setValue(0);
+        jSpinner7.setValue(0);
+        jSpinner8.setValue(0);
+        jSpinner9.setValue(0);
+        lbAmountToPay.setText("R 0.00");
+        outputReceipts.setText("");
+       
+        disableMiddleSpinners();
+        this.hours = 0;
+        this.amount = 0.00;
+    }
+    private void disableMiddleSpinners(){
+         
+        jSpinner1.setEnabled(false);
+        jSpinner10.setEnabled(false);
+        jSpinner11.setEnabled(false);
+        jSpinner2.setEnabled(false);
+        jSpinner3.setEnabled(false);
+        jSpinner4.setEnabled(false);
+        jSpinner5.setEnabled(false);
+        jSpinner6.setEnabled(false);
+        jSpinner7.setEnabled(false);
+        jSpinner8.setEnabled(false);
+        jSpinner9.setEnabled(false);
+    }
+     private void enableMiddleSpinners(){
+         
+        jSpinner1.setEnabled(true);
+        jSpinner10.setEnabled(true);
+        jSpinner11.setEnabled(true);
+        jSpinner2.setEnabled(true);
+        jSpinner3.setEnabled(true);
+        jSpinner4.setEnabled(true);
+        jSpinner5.setEnabled(true);
+        jSpinner6.setEnabled(true);
+        jSpinner7.setEnabled(true);
+        jSpinner8.setEnabled(true);
+        jSpinner9.setEnabled(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,7 +161,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         exitTimePanel = new javax.swing.JPanel();
         calcPaymentBtn = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
+        middlePanel = new javax.swing.JPanel();
         jSpinner1 = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -116,7 +186,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         outputReceipts = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        payBtn = new javax.swing.JButton();
         lbAmountToPay = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
@@ -162,8 +232,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "How Are you paying?", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("DejaVu Sans", 0, 12))); // NOI18N
+        middlePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "How Are you paying?", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("DejaVu Sans", 0, 12))); // NOI18N
 
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner1StateChanged(evt);
@@ -174,6 +245,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel4.setText("R0.20");
 
+        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner2StateChanged(evt);
@@ -184,51 +256,66 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel6.setText("R1.00");
 
+        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner3.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner3StateChanged(evt);
             }
         });
 
+        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner4.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner4StateChanged(evt);
             }
         });
 
+        jSpinner5.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner5.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner5StateChanged(evt);
             }
         });
 
+        jSpinner6.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner6.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner6StateChanged(evt);
             }
         });
 
+        jSpinner7.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner7.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner7StateChanged(evt);
             }
         });
 
+        jSpinner8.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner8.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner8StateChanged(evt);
             }
         });
 
+        jSpinner9.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner9.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner9StateChanged(evt);
             }
         });
 
+        jSpinner10.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinner10.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner10StateChanged(evt);
+            }
+        });
+
+        jSpinner11.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        jSpinner11.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner11StateChanged(evt);
             }
         });
 
@@ -246,13 +333,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel13.setText("R200.00");
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout middlePanelLayout = new javax.swing.GroupLayout(middlePanel);
+        middlePanel.setLayout(middlePanelLayout);
+        middlePanelLayout.setHorizontalGroup(
+            middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, middlePanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel6)
@@ -264,9 +351,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jLabel12)
                     .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSpinner11, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSpinner11)
                     .addComponent(jSpinner10)
                     .addComponent(jSpinner9)
                     .addComponent(jSpinner8)
@@ -279,61 +366,68 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jSpinner5))
                 .addGap(16, 16, 16))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        middlePanelLayout.setVerticalGroup(
+            middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(middlePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner8, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner9, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner10, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinner11, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
         outputReceipts.setColumns(20);
+        outputReceipts.setFont(new java.awt.Font("DejaVu Sans", 0, 14)); // NOI18N
         outputReceipts.setRows(5);
         jScrollPane1.setViewportView(outputReceipts);
 
-        jButton2.setText("Pay");
+        payBtn.setText("Pay");
+        payBtn.setEnabled(false);
+        payBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payBtnActionPerformed(evt);
+            }
+        });
 
         lbAmountToPay.setEditable(false);
         lbAmountToPay.setText("R 0.00");
@@ -341,6 +435,11 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setText("Amount to pay:");
 
         jButton3.setText("Reset");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Admin");
 
@@ -353,7 +452,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(274, 274, 274))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(entryTimePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -362,17 +461,17 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(lbAmountToPay))
                     .addComponent(jLabel2))
                 .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(payBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(middlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,14 +491,14 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(middlePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbAmountToPay)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(payBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -428,89 +527,124 @@ public class MainFrame extends javax.swing.JFrame {
         setDenominatorMainObject();
         this.calculateDenominator = new CalculateValueOfDenominators(amount);
         
+        enableMiddleSpinners();
     }//GEN-LAST:event_calcPaymentBtnActionPerformed
 
    
     
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        this.denominators.getTenCent().setQuantity(this.denominators.getTenCent().getQuantity()+1);
+        this.denominators.getTenCent().setQuantity((int)jSpinner1.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner1StateChanged
 
     private void jSpinner2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner2StateChanged
-        this.denominators.getTwentyCent().setQuantity(this.denominators.getTwentyCent().getQuantity()+1);
+        this.denominators.getTwentyCent().setQuantity((int) jSpinner2.getValue());      
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
-      
+           
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner2StateChanged
 
     private void jSpinner3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner3StateChanged
-         this.denominators.getFifthCent().setQuantity(this.denominators.getFifthCent().getQuantity()+1);
+         this.denominators.getFifthCent().setQuantity((int)jSpinner3.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner3StateChanged
 
     private void jSpinner4StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner4StateChanged
-         this.denominators.getOneRand().setQuantity(this.denominators.getOneRand().getQuantity()+1);
+         this.denominators.getOneRand().setQuantity((int)jSpinner4.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner4StateChanged
 
     private void jSpinner5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner5StateChanged
-         this.denominators.getTwoRand().setQuantity(this.denominators.getTwoRand().getQuantity()+1);
+         this.denominators.getTwoRand().setQuantity((int)jSpinner5.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner5StateChanged
 
     private void jSpinner6StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner6StateChanged
-          this.denominators.getFiveRand().setQuantity(this.denominators.getFiveRand().getQuantity()+1);
+          this.denominators.getFiveRand().setQuantity((int)jSpinner6.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner6StateChanged
 
     private void jSpinner7StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner7StateChanged
-          this.denominators.getTenRand().setQuantity(this.denominators.getTenRand().getQuantity()+1);
+          this.denominators.getTenRand().setQuantity((int)jSpinner7.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner7StateChanged
 
     private void jSpinner8StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner8StateChanged
-         this.denominators.getTwentyRand().setQuantity(this.denominators.getTwentyRand().getQuantity()+1);
+         this.denominators.getTwentyRand().setQuantity((int)jSpinner8.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner8StateChanged
 
     private void jSpinner9StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner9StateChanged
-          this.denominators.getFiftyRand().setQuantity(this.denominators.getFiftyRand().getQuantity()+1);
+          this.denominators.getFiftyRand().setQuantity((int)jSpinner9.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner9StateChanged
 
     private void jSpinner10StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner10StateChanged
-           this.denominators.getOneHunderdRand().setQuantity(this.denominators.getOneHunderdRand().getQuantity()+1);
+           this.denominators.getOneHunderdRand().setQuantity((int)jSpinner10.getValue());
         this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
       
         this.outputBuilder.setAmountEntered(this.amountEntered);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
     }//GEN-LAST:event_jSpinner10StateChanged
+
+    private void jSpinner11StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner11StateChanged
+        this.denominators.getTwoHunderdRand().setQuantity((int)jSpinner11.getValue());
+        this.amountEntered = Math.round(this.calculateDenominator.denominatorsToAmount(this.denominators)*100.00) /100.00;
+      
+        this.outputBuilder.setAmountEntered(this.amountEntered);
+        this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
+        checkForRightAmount();
+    }//GEN-LAST:event_jSpinner11StateChanged
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        reset();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void payBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBtnActionPerformed
+       
+        this.changesObject =  this.changeCalculator.calculate(Math.abs(amount-amountEntered));
+        this.outputBuilder.setChangeAmount(Math.abs(amount-amountEntered));
+        this.outputBuilder.setChangeObject(this.changesObject);
+        
+        this.outputReceipts.setText(this.outputBuilder.createWholeString());
+               
+      
+    }//GEN-LAST:event_payBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -551,7 +685,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton calcPaymentBtn;
     private javax.swing.JPanel entryTimePanel;
     private javax.swing.JPanel exitTimePanel;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
@@ -567,7 +700,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner10;
@@ -581,7 +713,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JSpinner jSpinner8;
     private javax.swing.JSpinner jSpinner9;
     private javax.swing.JTextField lbAmountToPay;
+    private javax.swing.JPanel middlePanel;
     private javax.swing.JTextArea outputReceipts;
+    private javax.swing.JButton payBtn;
     // End of variables declaration//GEN-END:variables
 
     

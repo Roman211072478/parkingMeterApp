@@ -5,7 +5,10 @@
  */
 package parkingmeterapp.com.app.components;
 
+import com.parking.meter.models.DenominatorInnerValues;
 import com.parking.meter.models.Denominators;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,6 +20,7 @@ public class OutputBuilder {
     private double amountEntered;
     private double changeAmount;
     private Denominators changeObject;
+    private List<DenominatorInnerValues> denominatorsList;
     
     public OutputBuilder()
     {
@@ -34,7 +38,7 @@ public class OutputBuilder {
          return  "Time:\n"+hours+" hours"+ " and minutes"+"\n"+
                 "Your entered:\nR "+amountEntered+"\nYour change:\nR "+
                 changeAmount+"\n"+
-                "Denomination:\n"+"R ";
+                "Denomination:\n"+filterDenominator();
      }
      
      
@@ -52,6 +56,33 @@ public class OutputBuilder {
 
     public void setChangeObject(Denominators changeObject) {
         this.changeObject = changeObject;
+        denominatorsList = new ArrayList<>();
+        
+        this.denominatorsList.add(changeObject.getTwoHunderdRand());
+        this.denominatorsList.add(changeObject.getOneHunderdRand());
+        this.denominatorsList.add(changeObject.getFiftyRand());
+        this.denominatorsList.add(changeObject.getTwentyRand());
+        this.denominatorsList.add(changeObject.getTenRand());
+        this.denominatorsList.add(changeObject.getFiveRand());
+        this.denominatorsList.add(changeObject.getTwoRand());
+        this.denominatorsList.add(changeObject.getOneRand());
+        this.denominatorsList.add(changeObject.getFifthCent());
+        this.denominatorsList.add(changeObject.getTwentyCent());
+        this.denominatorsList.add(changeObject.getTenCent());
+    }
+    
+    private String filterDenominator()
+    {
+        String result="";
+            
+           for(int x = 0;x<denominatorsList.size();x++){
+       
+               if (denominatorsList.get(x).getQuantity() > 0) {
+                result += "R "+(Math.round(denominatorsList.get(x).getValue() * 100))/100+" x"+denominatorsList.get(x).getQuantity()+"\n";              
+               }
+           }
+        
+       return result;  
     }
     
 }
