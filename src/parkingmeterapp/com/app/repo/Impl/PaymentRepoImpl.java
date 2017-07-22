@@ -22,35 +22,38 @@ import parkingmeterapp.com.app.repo.PaymentRepo;
  */
 public class PaymentRepoImpl implements PaymentRepo{
 
-    private static final String FILE_NAME = "payMeterData.txt";
-    
+    //A constant variable for file name which shouldn't change
+    public static final String FILE_NAME = "payMeterData.txt";
+       
     public PaymentRepoImpl() {
     }
-
     
     @Override
     public boolean write(String data) {
+        //Implementation of writing to a file
          try{
             
-            //check if file exits
+            //check if the file exits
             File myFile = new File(FILE_NAME);
             
             if(!myFile.exists())
             {
+                //if file doesn't exist
                 myFile.createNewFile();
             }
             
-              // Create file 
+            //Load buffer , and the boolean is to enable appending
             FileWriter fstream = new FileWriter(myFile.getAbsoluteFile(),true);
             BufferedWriter out = new BufferedWriter(fstream);
             
-            out.write(data+"\n");
-            //Close the output stream
-          
+            out.write(data+"\n");//append to the file
+            
+            //Close the output stream          
             out.close();
-            return true;
+            
+            return true;//to indicate that the save was successful
                     
-        }catch (Exception e){//Catch exception if any
+        }catch (Exception e){//Catch exception if save was unsuccessful
             return false;
         }
     }
@@ -58,26 +61,29 @@ public class PaymentRepoImpl implements PaymentRepo{
     @Override
     public List<Object[]> read() {
         
+        //initials buffer
        BufferedReader buffer = null;
        FileReader fr = null;
        
        try{
+           
         fr = new FileReader(FILE_NAME);
         buffer = new BufferedReader(fr);
         
+        //variables
         String output = "";
         String line;
 
         List<Object[]> list = new ArrayList<>();
         
+        //read file til end of file
         while((line = buffer.readLine()) != null)
         {
-            
-            output += line+"\n";
-            Object[] data = new Object[6];
+            Object[] data = new Object[6];//due to the being 6 colums in our table
             if(line != null || line != "")
             {
-                Scanner s = new Scanner(output).useDelimiter("\\s*-\\s*");
+                //use deliminator to retrieve data
+                Scanner s = new Scanner(line).useDelimiter("\\s*-\\s*");
                 data[0] = s.next();
                 data[1] = s.next();
                 data[2] = s.next();
@@ -85,7 +91,7 @@ public class PaymentRepoImpl implements PaymentRepo{
                 data[4] = s.next();
                 data[5] = s.next(); 
                          
-                list.add(data);
+                list.add(data);//add data to list
             }
                       
         }
@@ -95,8 +101,7 @@ public class PaymentRepoImpl implements PaymentRepo{
        catch(IOException e){
            return null;
        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
+        catch(Exception e){         
            return null;
        }
     }

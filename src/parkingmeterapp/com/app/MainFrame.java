@@ -12,7 +12,9 @@ import com.parking.meter.logic.AmountPayable;
 import com.parking.meter.models.Denominators;
 import com.parking.meter.view.builder.components.DateComponent;
 import java.awt.FlowLayout;
+import java.io.File;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import parkingmeterapp.com.app.components.OutputBuilder;
 import parkingmeterapp.com.app.repo.Impl.PaymentRepoImpl;
@@ -30,7 +32,7 @@ public class MainFrame extends javax.swing.JFrame {
      * Creates new form MainFrame
      */
     
-    //Custom variables
+    //Custom variables and object
     private JSpinner entryTimeDateSpinner;
     private JSpinner exitTimeDateSpinner;
     private long hours;
@@ -50,11 +52,12 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void CustomizedInitialize() {
-        
+        //My Custom initializer
         createLeftPanels();
-        disableMiddleSpinners();
-        
+        disableMiddleSpinners();        
     }
+    
+    //reinitializing of an Object, with a builder method
     private void setDenominatorMainObject()
     {
         this.denominators = Denominators.builder()
@@ -71,9 +74,12 @@ public class MainFrame extends javax.swing.JFrame {
                 .oneRand(0)
                 .build();
     }
+    
     private void createLeftPanels()
     {
-         this.entryTimeDateSpinner = DateComponent.create();
+        //Calling a method for .jar to make a date Model spinner,and
+        //adding it to the 2 panels
+        this.entryTimeDateSpinner = DateComponent.create();
          
         this.entryTimePanel.setLayout(new FlowLayout());
         this.entryTimePanel.add(this.entryTimeDateSpinner);
@@ -84,9 +90,9 @@ public class MainFrame extends javax.swing.JFrame {
         this.exitTimePanel.add(this.exitTimeDateSpinner);
     }
     
+    //Check if the amount entered is the meets requirements/more then fee
     private void checkForRightAmount()
-    {
-        
+    {        
         if(this.amountEntered < this.amount || this.amountEntered == 0){
              
             if(this.payBtn.isEnabled()){
@@ -94,17 +100,16 @@ public class MainFrame extends javax.swing.JFrame {
              }
              
             }
-        else if(this.amountEntered >= this.amount)
-        {           
+        else if(this.amountEntered >= this.amount){           
             if(!this.payBtn.isEnabled()){
              this.payBtn.setEnabled(true);
             }            
         }                   
-        
     }
     
     private void reset()
     {
+        //Reset everything to beginning phase/starting point
         jSpinner1.setValue(0);
         jSpinner1.setValue(0);
         jSpinner10.setValue(0);
@@ -131,7 +136,7 @@ public class MainFrame extends javax.swing.JFrame {
         exitTimeDateSpinner.setValue(new Date());
     }
     private void disableMiddleSpinners(){
-         
+         //deisable denominators
         jSpinner1.setEnabled(false);
         jSpinner10.setEnabled(false);
         jSpinner11.setEnabled(false);
@@ -145,7 +150,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSpinner9.setEnabled(false);
     }
      private void enableMiddleSpinners(){
-         
+        //Enable denominators
         jSpinner1.setEnabled(true);
         jSpinner10.setEnabled(true);
         jSpinner11.setEnabled(true);
@@ -519,23 +524,23 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+/**Calculator Button****/
     private void calcPaymentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcPaymentBtnActionPerformed
         
-        this.outputReceipts.setText("");
+        this.outputReceipts.setText("");//setTextArea to blank
         this.outputBuilder = new OutputBuilder();
-        
-        
+               
         //Calculate hour much hours
         this.hours = CalculateHours.Calculate(entryTimeDateSpinner, exitTimeDateSpinner);
         this.outputBuilder.setHours((int)hours);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
      
-        //Calculate the amount payable by using the logic in the jar file
+        //Calculate the amount payable by using the logic in my jar file
          amount =(double) AmountPayable.AmountToBePaid(hours);
-         //this.outputBuilder.set
-         
+                  
         //Set text to show amount payable
         this.lbAmountToPay.setText("R "+String.valueOf(amount));
         
@@ -543,16 +548,21 @@ public class MainFrame extends javax.swing.JFrame {
         setDenominatorMainObject();
         this.calculateDenominator = new CalculateValueOfDenominators(amount);
         
-        enableMiddleSpinners();
+         enableMiddleSpinners();
         
          entryTimeDateSpinner.setEnabled(false);
          exitTimeDateSpinner.setEnabled(false);
          
-         calcPaymentBtn.setEnabled(false);
-         
+         calcPaymentBtn.setEnabled(false);         
     }//GEN-LAST:event_calcPaymentBtnActionPerformed
 
-   
+   /**Below is the spinners for the denominators, all 11 is pretty much the same.
+    * First it sets the denominator model object quantity to the components value,
+    * Then we calculate the amount entered. Which then we build a string output for
+    * the textArea, and then we check if the amount was met and if so then the 
+    * pay button becomes enabled. Everything mentioned applies to 11 elements. This
+    * way it will update the value every time when an element's state is changed
+    */
     
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
         this.denominators.getTenCent().setQuantity((int)jSpinner1.getValue());
@@ -652,17 +662,22 @@ public class MainFrame extends javax.swing.JFrame {
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
         checkForRightAmount();
     }//GEN-LAST:event_jSpinner11StateChanged
-
+/***Reset button******/
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        reset();
+        reset();//reset all fields
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    /***Pay Button***/
     private void payBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBtnActionPerformed
-       
+       //The Math.abs, which is absolute value, which shows how much is lefts after
+       //the amount- amountEntered, which would say -x, where we only need x
         this.changesObject =  this.changeCalculator.calculate(Math.abs(amount-amountEntered));
+        
+        //Now to build an output
         this.outputBuilder.setChangeAmount(Math.abs(amount-amountEntered));
         this.outputBuilder.setChangeObject(this.changesObject);
         
+        //Set the TextArea with the text that was just built 
         this.outputReceipts.setText(this.outputBuilder.createWholeString());
                
         PaymentRepo repo = new PaymentRepoImpl();
@@ -671,16 +686,28 @@ public class MainFrame extends javax.swing.JFrame {
       this.payBtn.setEnabled(false);
       disableMiddleSpinners();
     }//GEN-LAST:event_payBtnActionPerformed
-
+/***Administration Button**/
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-             
-        AdminFrame nextFrame = new AdminFrame();
-            nextFrame.setAlwaysOnTop(true);
-            nextFrame.setVisible(true);
+        
+        //Check if the is data available
+        File myFile = new File(PaymentRepoImpl.FILE_NAME);
+        
+        if(myFile.exists())
+            {
+                //calls new Frame   
+                AdminFrame nextFrame = new AdminFrame();
+                nextFrame.setAlwaysOnTop(true);
+                nextFrame.setVisible(true);
+            }     
+        else{
+           JOptionPane.showMessageDialog(this,"There is no data available.",
+           "Warning",JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    //Prepare a format to be written to text file
     private String prepDataForRepo()
-    {      
+    {      //All the data is converted into strings
         return  String.valueOf(this.entryTimeDateSpinner.getValue())+" - "+
                 String.valueOf(this.exitTimeDateSpinner.getValue())+" - "+
                 String.valueOf(this.hours) +" - "+

@@ -9,9 +9,10 @@ import java.util.List;
 
 /**
  *
- * @author dev2
+ * @author Rafiq
  */
 public interface PaymentRepo {
+    //Have a habit of doing a Repos and Services like this due to campus
     public boolean write(String data);
     public List<Object[]> read();
            

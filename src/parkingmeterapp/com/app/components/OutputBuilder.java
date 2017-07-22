@@ -16,32 +16,41 @@ import java.util.List;
  */
 public class OutputBuilder {
     
+    //Add Variables
     private int hours;
     private double amountEntered;
     private double changeAmount;
+    //Objects
     private Denominators changeObject;
+    //Lists
     private List<DenominatorInnerValues> denominatorsList;
     
+    //Constructor
     public OutputBuilder()
-    {
-           
-    }
+    {}
 
+     //** This method is to return a portion of the output,example when 
+     //** calculating and choosing amount entered
      public String createFirstPortionString()
-    {
+    {//Returning a format of the output
         return  "Time:\n"+hours+" hours"+ " and minutes"+"\n"+
                 "Your entered:\nR "+amountEntered;
     }
      
+      //** This method is to return the second portion of the output,example when 
+     //** putting out the change and the denominator
      public String createWholeString()
      {
          return  "Time:\n"+hours+" hours"+ " and minutes"+"\n"+
                 "Your entered:\nR "+amountEntered+"\nYour change:\nR "+
                 changeAmount+"\n"+
+                 //call a method to present the denonators
+                 //from object
                 filterDenominator();
+                                   
      }
      
-     
+     /**Setters**/
     public void setHours(int hours) {
         this.hours = hours;
     }
@@ -54,10 +63,14 @@ public class OutputBuilder {
         this.changeAmount = changeAmount;
     }
 
+   
     public void setChangeObject(Denominators changeObject) {
         this.changeObject = changeObject;
         denominatorsList = new ArrayList<>();
         
+        //Below I have stored that data in a list, which will minimize the 
+        //lines of code, Where i will use a loop and one if statement...
+        //Check method below this one
         this.denominatorsList.add(changeObject.getTwoHunderdRand());
         this.denominatorsList.add(changeObject.getOneHunderdRand());
         this.denominatorsList.add(changeObject.getFiftyRand());
@@ -73,6 +86,7 @@ public class OutputBuilder {
     
     private String filterDenominator()
     {
+        //This method returns a output result to show the denominators
         if(this.changeAmount == 0)
         {
             return "";
