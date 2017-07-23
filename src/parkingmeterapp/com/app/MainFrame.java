@@ -7,7 +7,12 @@ package parkingmeterapp.com.app;
 
 import java.awt.FlowLayout;
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import parkingmeterapp.com.app.calculations.CalculateChangeDenominators;
@@ -707,14 +712,36 @@ public class MainFrame extends javax.swing.JFrame {
 
     //Prepare a format to be written to text file
     private String prepDataForRepo()
-    {      //All the data is converted into strings
-        return  String.valueOf(this.entryTimeDateSpinner.getValue())+" - "+
-                String.valueOf(this.exitTimeDateSpinner.getValue())+" - "+
+    {   
+        //All the data is converted into strings
+        SimpleDateFormat format = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+
+        //Create date variables for comparison
+        Date date1 = new Date();
+        Date date2 = new Date();
+        
+        try {
+             date1 = format.parse(String.valueOf(this.entryTimeDateSpinner.getValue()));
+             date2 = format.parse(String.valueOf(this.exitTimeDateSpinner.getValue()));
+        } catch (ParseException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println(dateConversion(date2));
+      
+        
+        return  String.valueOf(dateConversion(date1))+" - "+
+                String.valueOf(dateConversion(date2))+" - "+
                 String.valueOf(this.hours) +" - "+
                 String.valueOf(this.amount) +" - "+
                 String.valueOf(this.amountEntered)+" - "+
                 String.valueOf(Math.abs(amount-amountEntered))+" - ";
               
+    }
+    
+    private String dateConversion(Date d)
+    {        
+        return String.valueOf((d.getYear()+1900)+"/"+d.getMonth()+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes());
     }
     /**
      * @param args the command line arguments
