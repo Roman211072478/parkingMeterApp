@@ -21,6 +21,8 @@ public class DateComponent {
 
         component.setEditor(timeEditor);
         component.setValue(new Date());
+        
+        component.setToolTipText("First double click on a portion of the date editing");
 
         return component;
     }

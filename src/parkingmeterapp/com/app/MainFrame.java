@@ -49,7 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
     private String yourChanges;
     private String txtTime,txtEnterAmount,txtChange,txtDenominators = "";
     private OutputBuilder outputBuilder;
-    private CalculateChangeDenominators changeCalculator = new CalculateChangeDenominators();;
+    private final CalculateChangeDenominators changeCalculator = new CalculateChangeDenominators();;
     
     public MainFrame() {
         initComponents();
@@ -256,6 +256,8 @@ public class MainFrame extends javax.swing.JFrame {
         middlePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "How Are you paying?", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("DejaVu Sans", 0, 12))); // NOI18N
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        jSpinner1.setMinimumSize(new java.awt.Dimension(42, 28));
+        jSpinner1.setPreferredSize(new java.awt.Dimension(45, 28));
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner1StateChanged(evt);
@@ -267,6 +269,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4.setText("R0.20");
 
         jSpinner2.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        jSpinner2.setPreferredSize(new java.awt.Dimension(45, 28));
         jSpinner2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner2StateChanged(evt);
@@ -372,7 +375,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jLabel12)
                     .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
                 .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jSpinner11)
                     .addComponent(jSpinner10)
@@ -380,8 +383,8 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jSpinner8)
                     .addComponent(jSpinner7)
                     .addComponent(jSpinner6)
-                    .addComponent(jSpinner1)
-                    .addComponent(jSpinner2)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSpinner2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSpinner3)
                     .addComponent(jSpinner4)
                     .addComponent(jSpinner5))
@@ -488,16 +491,16 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(payBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(payBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                     .addComponent(middlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -540,6 +543,18 @@ public class MainFrame extends javax.swing.JFrame {
                
         //Calculate hour much hours
         this.hours = CalculateHours.Calculate(entryTimeDateSpinner, exitTimeDateSpinner);
+        
+        if(this.hours > 8500)//means it is almost a year
+        {
+           JOptionPane.showMessageDialog(this,"Do note that the two dates are almost a year apart.",
+           "Information",JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(this.hours > 72) //More than 3 days
+        {
+           JOptionPane.showMessageDialog(this,"Do note that the two dates are more than 3 apart",
+           "Information",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
         this.outputBuilder.setHours((int)hours);
         this.outputReceipts.setText(this.outputBuilder.createFirstPortionString());
      
